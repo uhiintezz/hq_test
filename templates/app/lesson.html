@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <form method="post" id="form">
+        {% csrf_token %}
+    </form>
+    <h1>{{ lesson.name }}</h1>
+
+<!--    <video-->
+<!--            id="my-video"-->
+<!--            class="video-js"-->
+<!--            src="{% static 'videos/1lesson.mp4' %}"-->
+<!--            data-lesson-pk="{{ lesson.pk }}"-->
+<!--            controls-->
+<!--            preload="auto"-->
+<!--            width="1000"-->
+<!--            height="800"-->
+<!--            data-setup="{}"-->
+<!--            onerror="handleError()"-->
+<!--    >-->
+<!--    </video>-->
+
+    <video
+            id="my-video"
+            class="video-js"
+            data-lesson-pk="{{ lesson.pk }}"
+            controls
+            preload="auto"
+            width="640"
+            data-setup="{}">
+<!--        <source src="{% static 'videos/1lesson.mp4' %}" type="video/mp4" />-->
+        <source src="{% url 'stream' lesson.id %}" type="video/mp4" />
+<!--        <source src="{% url 'stream' lesson.id %}" type="video/webm" />-->
+    </video>
+
+
+    <script>
+        csrftoken = document.getElementById('form').getElementsByTagName('input')[0].value
+        var videoPlayer = document.getElementById('my-video');
+        var lastSentPosition = 0;
+
+        videoPlayer.addEventListener('timeupdate', function () {
+            var currentPosition = videoPlayer.currentTime;
+
+            // Отправляем данные только если текущая позиция изменилась на 10 секунд или более
+            if (Math.abs(currentPosition - lastSentPosition) >= 10) {
+                lastSentPosition = currentPosition;
+                sendPositionToServer(currentPosition);
+            }
+        });
+
+        function sendPositionToServer(position) {
+            // Используйте AJAX или Fetch API для отправки данных на сервер
+            var lessonId = videoPlayer.dataset.lessonPk
+
+            fetch('/update_position/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken // Если используется CSRF-защита в Django
+                },
+                body: JSON.stringify({position: position, lesson_id: lessonId})
+            });
+        }
+    </script>
+
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+{% endblock content %}
