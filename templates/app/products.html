@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Продукты:</h1>
+    {% for product in products %}
+        <h2><a href="{% url 'product' pk=product.product.pk %}">{{ product.product.name }}</a> </h2>
+    {% endfor %}
+{% endblock content %}

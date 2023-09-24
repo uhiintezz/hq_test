@@ -1,9 +1,9 @@
-dfsasdfadsf ads
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
+    <h1>Уроки:</h1>
     {% for lesson in lessons %}
-        <h3><a href={{ lesson.get_absolute_url }}>{{ lesson.name }}</a> </h3>
+        <h2><a href="{{ lesson.get_absolute_url }}">{{ lesson.name }}</a> </h2>
     {% endfor %}
 {% endblock content %}

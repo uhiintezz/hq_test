@@ -27,7 +27,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api-auth/register/', UserRegistrationAPIView.as_view()),
     path('', include('app.urls')),
-    path('', lambda request: redirect('lessons'), name='root_direct'),
+    path('', lambda request: redirect('products'), name='root_direct'),
 ]
 
 

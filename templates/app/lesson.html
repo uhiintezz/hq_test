@@ -1,26 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
     <form method="post" id="form">
         {% csrf_token %}
     </form>
     <h1>{{ lesson.name }}</h1>
-
-<!--    <video-->
-<!--            id="my-video"-->
-<!--            class="video-js"-->
-<!--            src="{% static 'videos/1lesson.mp4' %}"-->
-<!--            data-lesson-pk="{{ lesson.pk }}"-->
-<!--            controls-->
-<!--            preload="auto"-->
-<!--            width="1000"-->
-<!--            height="800"-->
-<!--            data-setup="{}"-->
-<!--            onerror="handleError()"-->
-<!--    >-->
-<!--    </video>-->
-
     <video
             id="my-video"
             class="video-js"
@@ -29,9 +13,7 @@
             preload="auto"
             width="640"
             data-setup="{}">
-<!--        <source src="{% static 'videos/1lesson.mp4' %}" type="video/mp4" />-->
-        <source src="{% url 'stream' lesson.id %}" type="video/mp4" />
-<!--        <source src="{% url 'stream' lesson.id %}" type="video/webm" />-->
+        <source src="{% url 'stream' lesson.id %}" type="video/mp4"/>
     </video>
 
 
@@ -51,14 +33,13 @@
         });
 
         function sendPositionToServer(position) {
-            // Используйте AJAX или Fetch API для отправки данных на сервер
             var lessonId = videoPlayer.dataset.lessonPk
 
             fetch('/update_position/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken // Если используется CSRF-защита в Django
+                    'X-CSRFToken': csrftoken
                 },
                 body: JSON.stringify({position: position, lesson_id: lessonId})
             });
